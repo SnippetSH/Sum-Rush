@@ -26,11 +26,10 @@
 
     // 각 스테이지에서 몇 개의 숫자를 표시할지 설정
     const stageInterval = [3, 5, 8, 8, 4, 4, 4, 5, 5, 6, 6, 4];
-    const currentStageNumbers: number[] = [];
+    let currentStageNumbers: number[] = [];
 
     // 현재 표시 중인 숫자
     let currentNumber = Math.floor(Math.random() * maxNum) + 1;
-    let reviewingNumber = 0;
     let isReviewing = false;
 
     // 이번 스테이지에서 누적된 정답(합계)
@@ -77,6 +76,7 @@
         }
 
         // 스테이지 초기화
+        currentStageNumbers = []; 
         countCurrentStage = 1;
         currentNumber = Math.floor(Math.random() * maxNum) + 1;
         currentStageNumbers.push(currentNumber);
@@ -98,6 +98,8 @@
             // 카운트 증가
             countCurrentStage++;
             currentStageNumbers.push(newNumber);
+        
+            console.log("currentNumber: ", currentStageNumbers);
 
             // 이번 스테이지에서 필요한 숫자를 다 표시했으면
             if (countCurrentStage === stageInterval[stage]) {
@@ -138,12 +140,13 @@
                 currentNumber = currentStageNumbers[index];
                 index++;
             } else {
-                clearInterval(reviewInterval);
                 currentNumber = temp;
                 isReviewing = false;
-                currentStageNumbers.length = 0;
+                clearInterval(reviewInterval);
             }
         }, 1000);
+
+        currentStageNumbers = [];
     }
 
     /**
@@ -246,7 +249,7 @@
         class="mt-2 px-4 py-2 bg-[#FF7B9D] text-white review-button rounded-lg"
         class:review-button={isReviewing}
     >
-        다시 보기
+        Review
     </button>
 </div>
 
