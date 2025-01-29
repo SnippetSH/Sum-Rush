@@ -25,7 +25,7 @@
     let maxNum = 9;
 
     // 각 스테이지에서 몇 개의 숫자를 표시할지 설정
-    const stageInterval = [3, 5, 8, 8, 4, 4, 4, 5, 5, 6, 6, 4];
+    const stageInterval = [3, 5, 6, 6, 4, 4, 4, 5, 5, 6, 6, 4];
     let currentStageNumbers: number[] = [];
 
     // 현재 표시 중인 숫자
@@ -99,7 +99,7 @@
             countCurrentStage++;
             currentStageNumbers.push(newNumber);
         
-            console.log("currentNumber: ", currentStageNumbers);
+            // console.log("currentNumber: ", currentStageNumbers);
 
             // 이번 스테이지에서 필요한 숫자를 다 표시했으면
             if (countCurrentStage === stageInterval[stage]) {
@@ -110,11 +110,11 @@
                 // 여기서부터는 유저가 답을 입력하길 기다림
 
                 if (stage === 4) {
-                    maxNum = 18;
+                    maxNum = 22;
                 } else if (stage === 7) {
-                    maxNum = 27;
+                    maxNum = 28;
                 } else if (stage === 10) {
-                    maxNum = 36;
+                    maxNum = 34;
                 }
             }
         }, 1000);
@@ -194,6 +194,9 @@
 </script>
 
 <!-- 간단한 UI -->
+<div class="retrosans text-center text-xl text-black flex justify-center items-center mb-1">
+    Displayed Numbers: {stageInterval[stage]}
+</div>
 <div
     style="width: {width}px; height: {height}px;"
     class="bg-[#FFAAA1]/50 relative flex flex-col justify-center items-center rounded-2xl"
