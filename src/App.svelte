@@ -2,6 +2,9 @@
   import { onMount } from "svelte";
   import Game from "./Game.svelte";
   import { time, isStart, score } from "./store";
+  import { inject } from '@vercel/analytics';
+
+  inject({mode: 'auto'});
 
   let width = window.innerWidth / 4;
   let height = width * 0.725;
