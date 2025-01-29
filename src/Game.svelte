@@ -25,7 +25,19 @@
     let maxNum = 9;
 
     // 각 스테이지에서 몇 개의 숫자를 표시할지 설정
-    const stageInterval = [3, 5, 6, 6, 4, 4, 4, 5, 5, 6, 6, 4];
+    const stageInterval = 
+        [3, 5, 6, 6, 
+        4, 4, 4, 
+        5, 5, 6, 
+        6, 6, 
+        6, 6, 6, 
+        5, 5, 5, 5, 5,
+        6, 6, 6, 6, 6,
+        7, 7, 7, 8, 8,
+        8, 8, 8, 8, 9,
+        10, 10, 10, 10, 10,
+        12, 12, 12, 12, 12,
+    ];
     let currentStageNumbers: number[] = [];
 
     // 현재 표시 중인 숫자
@@ -115,6 +127,14 @@
                     maxNum = 28;
                 } else if (stage === 10) {
                     maxNum = 34;
+                } else if (stage === 12) {
+                    maxNum = 40;
+                } else if (stage === 15) {
+                    maxNum = 80;
+                } else if (stage === 20) {
+                    maxNum = 100;
+                } else if (stage === 25) {
+                    maxNum = 120;
                 }
             }
         }, 1000);
