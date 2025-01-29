@@ -101,7 +101,7 @@
 
             // 이번 스테이지에서 필요한 숫자를 다 표시했으면
             if (countCurrentStage === stageInterval[stage]) {
-                console.log("정답: ", correctAnswer);
+                // console.log("정답: ", correctAnswer);
                 // 인터벌 정지
                 clearInterval(intervalID!);
                 intervalID = null;
@@ -239,7 +239,7 @@
         bind:value={inputValue}
         disabled={intervalID ? true : false}
         bind:this={inputElement}
-        class="w-1/2 h-10 border-2 rounded-lg text-center text-white bg-transparent"
+        class="w-1/2 h-10 border-2 rounded-lg text-center text-black bg-transparent"
     />
     <button
         on:click={reviewingNumbers}
