@@ -141,12 +141,13 @@
                 index++;
             } else {
                 currentNumber = temp;
+                currentStageNumbers = [];
                 isReviewing = false;
                 clearInterval(reviewInterval);
             }
         }, 1000);
 
-        currentStageNumbers = [];
+        
     }
 
     /**
