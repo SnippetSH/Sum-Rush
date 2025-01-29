@@ -141,7 +141,6 @@
                 index++;
             } else {
                 currentNumber = temp;
-                currentStageNumbers = [];
                 isReviewing = false;
                 clearInterval(reviewInterval);
             }
