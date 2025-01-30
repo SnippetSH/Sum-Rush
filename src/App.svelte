@@ -1,10 +1,11 @@
 <script>
-  import { onMount } from "svelte";
   import Game from "./Game.svelte";
   import { time, isStart, score } from "./store";
   import { inject } from '@vercel/analytics';
+  import { injectSpeedInsights } from "@vercel/speed-insights";
 
   inject({mode: 'auto'});
+  injectSpeedInsights();
 
   let width = window.innerWidth / 4;
   let height = width * 0.725;
