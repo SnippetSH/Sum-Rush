@@ -1,23 +1,40 @@
+import { createClient } from 'redis';
 
-import { kv } from '@vercel/kv';
+// 1. Redis 클라이언트 초기화 (핸들러 외부)
+// 이렇게 하면 람다 컨테이너가 살아있는 동안 연결을 재사용할 수 있습니다.
+const client = createClient({
+  url: process.env.REDIS_URL, // .env에 REDIS_URL 정의 필요
+});
+
+client.on('error', (err) => console.error('Redis Client Error', err));
 
 export default async function handler(req, res) {
-  // 1. GET 요청: 랭킹 조회
+  // 2. DB 연결 (연결이 닫혀있을 때만 연결 시도)
+  if (!client.isOpen) {
+    await client.connect();
+  }
+
+  // 3. GET 요청: 랭킹 조회
   if (req.method === 'GET') {
     try {
-      // 'leaderboard' 키에서 점수가 높은 순(rev)으로 0~9등(10명) 가져오기
-      // withScores: true 옵션으로 점수와 닉네임을 같이 가져옴
-      const ranking = await kv.zrange('leaderboard', 0, 9, {
-        rev: true,
-        withScores: true
+      // zRangeWithScores: 점수와 값을 객체 배열로 반환
+      // REV: true (내림차순, 랭킹이므로)
+      const { limitTime = '120' } = req.query;
+      const allowedTime = ['120', '180', '240'];
+      if (!allowedTime.includes(limitTime)) {
+        return res.status(400).json({ message: `Invalid limitTime: ${limitTime}` });
+      }
+
+      const key = `leaderboard:${limitTime}`;
+      const ranking = await client.zRangeWithScores(key, 0, 9, {
+        REV: true
       });
 
-      // Redis 반환값은 [닉네임, 점수, 닉네임, 점수...] 형태이므로
-      // 보기 좋게 [{ nickname: 'A', score: 100 }, ...] 형태로 변환
-      const result = [];
-      for (let i = 0; i < ranking.length; i += 2) {
-        result.push({ nickname: ranking[i], score: ranking[i + 1] });
-      }
+      // ranking은 [{value: '닉네임', score: 100}, ...] 형태
+      const result = ranking.map(item => ({
+        nickname: item.value, // node-redis v4에서는 'value'가 멤버 값
+        score: item.score
+      }));
 
       return res.status(200).json(result);
     } catch (error) {
@@ -25,27 +42,30 @@ export default async function handler(req, res) {
     }
   }
 
-  // 2. POST 요청: 점수 등록 (최고 기록 갱신)
+  // 4. POST 요청: 점수 등록
   if (req.method === 'POST') {
     try {
-      const { nickname, score } = req.body;
+      // Vercel Function에서 req.body는 자동으로 파싱됩니다 (JSON인 경우)
+      const { nickname, score, limitTime } = req.body;
 
-      if (!nickname || typeof score !== 'number') {
+      if (!nickname || typeof score !== 'number' || !limitTime) {
         return res.status(400).json({ message: '닉네임과 숫자 점수가 필요합니다.' });
       }
 
-      // ZADD 명령어 실행
-      // member: 닉네임, score: 점수
-      // { gt: true }: "Greater Than" 옵션. 기존 점수보다 클 때만 업데이트함 (Redis 기능)
-      await kv.zadd('leaderboard', { score: score, member: nickname }, { gt: true });
+      const key = `leaderboard:${limitTime}`;
+      // GT: true (Greater Than, 신기록일 때만 업데이트)
+      await client.zAdd(key, {
+        score: score,
+        value: nickname,
+      }, { GT: true });
 
       return res.status(200).json({ message: '점수가 처리되었습니다.' });
     } catch (error) {
+      console.error(error);
       return res.status(500).json({ error: error.message });
     }
   }
 
-  // 그 외 메소드 거부
+  // 그 외 메소드
   return res.status(405).json({ message: 'Method Not Allowed' });
 }
-
