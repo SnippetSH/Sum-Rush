@@ -83,7 +83,7 @@
           {#each secs as sec}
             <button
               on:click={() => onChangeSeconds(sec)}
-              class="flex-1 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 relative
+              class="hover:cursor-pointer flex-1 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 relative
                   {currentSec === sec
                 ? 'bg-white text-[#FF7B9D] shadow-md scale-100 ring-1 ring-black/5'
                 : 'text-gray-400 hover:text-gray-600 hover:bg-white/50'}"
@@ -94,7 +94,7 @@
         </div>
 
         <button
-          class="w-full bg-[#FF7B9D] hover:bg-[#ff5d86] text-white text-2xl retrosans py-4 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 active:scale-95 flex justify-center items-center group"
+          class="hover:cursor-pointer w-full bg-[#FF7B9D] hover:bg-[#ff5d86] text-white text-2xl retrosans py-4 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 active:scale-95 flex justify-center items-center group"
           on:click={start}
         >
           <span class="pt-1">GAME START</span>
@@ -117,7 +117,7 @@
     </div>
     <div class="absolute bottom-10 flex gap-4">
       <button
-        class="px-6 py-2 rounded-full bg-white/80 hover:bg-white text-gray-600 font-bold text-sm shadow-sm hover:shadow-md transition-all flex items-center gap-2"
+        class="hover:cursor-pointer px-6 py-2 rounded-full bg-white/80 hover:bg-white text-gray-600 font-bold text-sm shadow-sm hover:shadow-md transition-all flex items-center gap-2"
         on:click={showRule}
       >
         <span>📜</span> Game Rule

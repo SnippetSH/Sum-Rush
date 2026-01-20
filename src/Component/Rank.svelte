@@ -52,13 +52,14 @@
     const tabs = [120, 180, 240];
 </script>
 
+{#if !showLeaderBoard}
 <div class="absolute top-4 right-4 z-10">
     <button
         on:click={getLeaderBoard}
         class="
             group flex items-center gap-2 px-4 py-2 
             bg-white/80 backdrop-blur-md border border-white/50 
-            rounded-full shadow-sm hover:shadow-md 
+            rounded-full shadow-sm hover:shadow-md hover:cursor-pointer
             transition-all duration-300 hover:-translate-y-0.5
         "
     >
@@ -71,6 +72,7 @@
         </span>
     </button>
 </div>
+{/if}
 
 {#if showLeaderBoard}
     <div
