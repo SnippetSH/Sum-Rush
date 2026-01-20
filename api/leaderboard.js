@@ -20,7 +20,7 @@ export default async function handler(req, res) {
       // zRangeWithScores: 점수와 값을 객체 배열로 반환
       // REV: true (내림차순, 랭킹이므로)
       const { limitTime = '120' } = req.query;
-      const allowedTime = ['120', '180', '240'];
+      const allowedTime = ['90', '120', '180'];
       if (!allowedTime.includes(limitTime)) {
         return res.status(400).json({ message: `Invalid limitTime: ${limitTime}` });
       }
