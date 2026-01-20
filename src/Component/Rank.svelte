@@ -49,7 +49,7 @@
         getLeaderBoard();
     }
 
-    const tabs = [120, 180, 240];
+    const tabs = [90, 120, 180];
 </script>
 
 {#if !showLeaderBoard}

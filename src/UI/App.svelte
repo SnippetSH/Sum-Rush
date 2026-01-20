@@ -47,7 +47,7 @@
     $time = sec;
     currentSec = get(time);
   }
-  const secs = [120, 180, 240];
+  const secs = [90, 120, 180];
 </script>
 
 <div
