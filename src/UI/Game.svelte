@@ -139,13 +139,12 @@
         correctAnswer = currentNumber;
         inputValue = "";
 
-        
         // n초마다 숫자 표시
-        if(diff === "EASY") {
+        if (diff === "EASY") {
             n = 800;
-        } else if(diff === "NORMAL") {
+        } else if (diff === "NORMAL") {
             n = 650;
-        } else if(diff === "HARD") {
+        } else if (diff === "HARD") {
             n = 500;
         }
         intervalID = setInterval(() => {
@@ -192,6 +191,7 @@
         }, n);
     }
 
+    let reviewCount = 0;
     function reviewingNumbers() {
         if (currentStageNumbers.length === 0) {
             return;
@@ -202,6 +202,7 @@
         }
 
         isReviewing = true;
+        reviewCount++;
         let index = 0;
 
         let temp = currentNumber;
@@ -216,7 +217,7 @@
                 isReviewing = false;
                 clearInterval(reviewInterval);
             }
-        }, n);
+        }, 900);
     }
 
     /**
@@ -240,15 +241,32 @@
         if (userSum === correctAnswer) {
             // 다음 스테이지로 이동
             stage++;
-            score.update((s) => {
-                let current = s;
-                current +=
-                    ((stage + 1) * (get(time) - (previousTime - currentTime))) /
-                    30;
+            // 상수 설정 (기존 랭킹 점수대 유지용)
+            const BASE_MULTIPLIER = 12;
+            const TOTAL_LIMIT = get(time); // 90, 120, 180 등
 
-                return Math.floor(current);
+            // 1. 스테이지를 클리어하는 데 걸린 시간 계산
+            const timeTaken = previousTime - currentTime;
+
+            score.update((s) => {
+                // 2. 시간 가중치: 빨리 풀수록 1에 수렴, 늦게 풀수록 0에 수렴
+                // (전체 시간 대비 남은 시간의 비율을 활용)
+                const timeBonus = currentTime / TOTAL_LIMIT;
+
+                // 3. 난이도 가중치: 스테이지가 올라갈수록 가점 (선형보다 조금 더 가파르게)
+                const stageBonus = 1 + stage * 0.2;
+
+                // 4. 최종 점수 계산
+                // 기본 점수(100) * 스테이지 가중치 * 시간 보너스
+                let addedScore = BASE_MULTIPLIER * stageBonus * timeBonus;
+                let minusScore = reviewCount * 0.8;
+
+                // 기존 점수와의 합산
+                return Math.floor(s + addedScore - minusScore);
             });
+
             previousTime = currentTime;
+            reviewCount = 0;
             if (stage < stageInterval.length) {
                 startStage();
             } else {
