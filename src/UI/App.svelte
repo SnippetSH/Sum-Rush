@@ -48,28 +48,34 @@
     currentSec = get(time);
   }
   const secs = [90, 120, 180];
+
+  let currentDif = "EASY";
+  function onChangeDifficulty(dif) {
+    currentDif = dif;
+  }
+  const difs = ["EASY", "NORMAL", "HARD"];
 </script>
 
 <div
   class="pretendard w-screen h-screen bg-linear-to-tl from-[#E4E1DC] via-[#F7F6F5] to-[#EBE9E6] flex flex-col justify-center items-center"
 >
   {#if $isStart}
-    <Game />
+    <Game diff={currentDif}/>
   {:else}
     <div
       style="width: {width}px; height: {height}px;"
       class="relative flex flex-col justify-center items-center"
     >
       <div
-        class="w-[90%] max-w-sm bg-white/40 backdrop-blur-md border border-white/60 shadow-2xl rounded-3xl p-8 flex flex-col items-center gap-6"
+        class="w-[90%] max-w-sm bg-white/40 backdrop-blur-md border border-white/60 shadow-2xl rounded-3xl p-8 flex flex-col items-center"
       >
         <h1
-          class="retrosans text-4xl text-[#FF7B9D] drop-shadow-sm tracking-wide"
+          class="retrosans text-4xl text-[#FF7B9D] drop-shadow-sm tracking-wide mb-6"
         >
           SUM RUSH
         </h1>
 
-        <div class="flex flex-col items-center">
+        <div class="flex flex-col items-center mb-5">
           <span
             class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1"
             >Last Score</span
@@ -79,10 +85,11 @@
           </span>
         </div>
 
-        <div class="flex bg-gray-200/50 p-1.5 rounded-2xl w-full">
+        <div class="flex bg-gray-200/50 p-1.5 rounded-2xl w-full mb-1">
           {#each secs as sec}
             <button
               on:click={() => onChangeSeconds(sec)}
+              id={`btn-${sec}`}
               class="hover:cursor-pointer flex-1 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 relative
                   {currentSec === sec
                 ? 'bg-white text-[#FF7B9D] shadow-md scale-100 ring-1 ring-black/5'
@@ -92,8 +99,23 @@
             </button>
           {/each}
         </div>
+        <div class="flex bg-gray-200/50 p-1.5 rounded-2xl w-full mb-6">
+          {#each difs as dif}
+            <button
+              on:click={() => onChangeDifficulty(dif)}
+              id={`btn-${dif}`}
+              class="hover:cursor-pointer flex-1 py-1 text-sm font-bold rounded-xl transition-all duration-300 relative
+                  {currentDif === dif
+                ? 'bg-white text-[#FF7B9D] shadow-md scale-100 ring-1 ring-black/5'
+                : 'text-gray-400 hover:text-gray-600 hover:bg-white/50'}"
+            >
+              {dif}
+            </button>
+          {/each}
+        </div>
 
         <button
+          id="btn-start"
           class="hover:cursor-pointer w-full bg-[#FF7B9D] hover:bg-[#ff5d86] text-white text-2xl retrosans py-4 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 active:scale-95 flex justify-center items-center group"
           on:click={start}
         >

@@ -3,6 +3,7 @@
     import { time, isStart, score, showToast } from "@/store";
     import { get } from "svelte/store";
 
+    export let diff: string;
     // 화면에 표시할 레이아웃 관련
     let width = window.innerWidth / 4;
     let height = width * 0.93;
@@ -123,6 +124,7 @@
     /**
      * 스테이지를 시작하는 함수
      */
+    let n = 1000;
     function startStage() {
         // 스테이지 범위를 넘어가면 (게임 클리어)
         if (stage >= stageInterval.length) {
@@ -137,7 +139,15 @@
         correctAnswer = currentNumber;
         inputValue = "";
 
-        // 0.8초마다 숫자 표시
+        
+        // n초마다 숫자 표시
+        if(diff === "EASY") {
+            n = 800;
+        } else if(diff === "NORMAL") {
+            n = 650;
+        } else if(diff === "HARD") {
+            n = 500;
+        }
         intervalID = setInterval(() => {
             let newNumber = Math.floor(Math.random() * maxNum) + 1;
             // 이전 숫자와 중복을 피하고 싶다면 아래 while 유지
@@ -179,7 +189,7 @@
                     maxNum = 120;
                 }
             }
-        }, 1000);
+        }, n);
     }
 
     function reviewingNumbers() {
@@ -206,7 +216,7 @@
                 isReviewing = false;
                 clearInterval(reviewInterval);
             }
-        }, 1000);
+        }, n);
     }
 
     /**
@@ -429,6 +439,7 @@
                 bind:value={inputValue}
                 disabled={intervalID || showGameOverModal ? true : false}
                 bind:this={inputElement}
+                id="number-input"
                 placeholder="?"
                 class="w-full h-14 bg-white/60 border-b-4 border-gray-200 rounded-t-xl text-center text-3xl font-bold text-gray-800 focus:border-[#FF7B9D] focus:bg-white outline-none transition-all placeholder-gray-300 disabled:bg-transparent disabled:border-transparent disabled:text-transparent"
             />
